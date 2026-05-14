@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowRight, Minus, Plus, ShoppingBag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
@@ -11,26 +11,78 @@ import CustomCursor from "@/components/CustomCursor";
 const EASE = [0.22, 1, 0.36, 1] as any;
 
 const products = [
-  { id: 1, name: "Vetta Chair", category: "Seating", price: "$800.00", image: "/product-1.png" },
-  { id: 2, name: "Arco Lounge", category: "Seating", price: "$988.00", image: "/product-2.png" },
-  { id: 3, name: "Sera Stool", category: "Seating", price: "$410.00", image: "/product-3.png" },
-  { id: 4, name: "Lume Chair", category: "Seating", price: "$332.00", image: "/product-4.png" },
-  { id: 5, name: "Nord Table", category: "Tables", price: "$1,200.00", image: "/hero.png" },
-  { id: 6, name: "Fjord Sofa", category: "Seating", price: "$2,450.00", image: "/collection-1.png" },
-  { id: 7, name: "Moso Bench", category: "Storage", price: "$580.00", image: "/collection-2.png" },
-  { id: 8, name: "Oura Chair", category: "Seating", price: "$890.00", image: "/collection-main.png" },
-  { id: 9, name: "Cava Lounge", category: "Seating", price: "$210.00", image: "/product-1.png" },
-  { id: 10, name: "Riva Stool", category: "Seating", price: "$222.00", image: "/product-2.png" },
-  { id: 11, name: "Sabbia Armchair", category: "Seating", price: "$333.00", image: "/product-3.png" },
-  { id: 12, name: "Dune Table", category: "Tables", price: "$1,100.00", image: "/product-4.png" },
-  { id: 13, name: "Kast Cabinet", category: "Storage", price: "$2,800.00", image: "/collection-3.png" },
-  { id: 14, name: "Lyska Pendant", category: "Lighting", price: "$450.00", image: "/collection-4.png" },
-  { id: 15, name: "Veneer Desk", category: "Tables", price: "$1,600.00", image: "/hero.png" },
-  { id: 16, name: "Soft Seating", category: "Seating", price: "$1,100.00", image: "/collection-1.png" },
-  { id: 17, name: "Alto Shelf", category: "Storage", price: "$920.00", image: "/product-1.png" },
-  { id: 18, name: "Glow Lamp", category: "Lighting", price: "$290.00", image: "/product-2.png" },
-  { id: 19, name: "Porta Sideboard", category: "Storage", price: "$1,450.00", image: "/product-3.png" },
-  { id: 20, name: "Rami Chair", category: "Seating", price: "$670.00", image: "/product-4.png" },
+  { 
+    id: 1, 
+    name: "Vetta Chair", 
+    category: "Seating", 
+    price: "$800.00", 
+    image: "/product-1.png",
+    description: "A masterclass in Italian minimalism. The Vetta Chair combines surgical precision with organic curves to create a seating experience that is as comfortable as it is architectural.",
+    specs: ["Material: Solid Oak & Premium Boucle", "Dimensions: 80 x 60 x 65cm", "Finish: Natural Wax"]
+  },
+  { 
+    id: 2, 
+    name: "Arco Lounge", 
+    category: "Seating", 
+    price: "$988.00", 
+    image: "/product-2.png",
+    description: "Designed for the modern sanctuary, the Arco Lounge features a signature curved backrest that embraces the form. Its low profile adds a sense of grounded luxury to any space.",
+    specs: ["Material: Walnut & Full-Grain Leather", "Dimensions: 75 x 85 x 90cm", "Designer: Elena Rossi"]
+  },
+  { 
+    id: 3, 
+    name: "Sera Stool", 
+    category: "Seating", 
+    price: "$410.00", 
+    image: "/product-3.png",
+    description: "The Sera Stool is a study in verticality and balance. Perfect as a standalone statement or paired with our Nord collection.",
+    specs: ["Material: Brushed Steel & Ash", "Dimensions: 45 x 35 x 35cm", "Weight: 6.5kg"]
+  },
+  { 
+    id: 4, 
+    name: "Lume Chair", 
+    category: "Seating", 
+    price: "$332.00", 
+    image: "/product-4.png",
+    description: "Lightweight and stackable, the Lume Chair doesn't compromise on aesthetic. Its translucent lines catch the light, creating a sense of ethereal presence.",
+    specs: ["Material: Recycled Polymer", "Dimensions: 82 x 45 x 48cm", "Colors: Smoke, Clear, Amber"]
+  },
+  { 
+    id: 5, 
+    name: "Nord Table", 
+    category: "Tables", 
+    price: "$1,200.00", 
+    image: "/hero.png",
+    description: "The centerpiece of the collection. The Nord Table features a massive solid wood top supported by asymmetrical architectural legs.",
+    specs: ["Material: Blackened Oak", "Dimensions: 220 x 100 x 75cm", "Capacity: 8 Persons"]
+  },
+  { 
+    id: 6, 
+    name: "Fjord Sofa", 
+    category: "Seating", 
+    price: "$2,450.00", 
+    image: "/collection-1.png",
+    description: "Inspired by the serenity of Nordic landscapes, the Fjord Sofa offers deep comfort with a modular design that adapts to your living flow.",
+    specs: ["Material: Belgian Linen", "Dimensions: 280 x 105 x 68cm", "Modular: 3 Sections"]
+  },
+  { 
+    id: 7, 
+    name: "Moso Bench", 
+    category: "Storage", 
+    price: "$580.00", 
+    image: "/collection-2.png",
+    description: "A hybrid of seating and storage, the Moso Bench is crafted from sustainable bamboo with hidden compartments for a clutter-free hallway.",
+    specs: ["Material: Pressed Bamboo", "Dimensions: 120 x 40 x 45cm", "Storage: 2 Drawers"]
+  },
+  { 
+    id: 8, 
+    name: "Oura Chair", 
+    category: "Seating", 
+    price: "$890.00", 
+    image: "/collection-main.png",
+    description: "A sculptural masterpiece. The Oura Chair challenges traditional geometry with its continuous loop frame and suspended seat.",
+    specs: ["Material: Powder Coated Steel", "Dimensions: 78 x 70 x 72cm", "Finish: Matte Sand"]
+  }
 ];
 
 const categories = ["All", "Seating", "Tables", "Storage", "Lighting"];
@@ -38,6 +90,7 @@ const categories = ["All", "Seating", "Tables", "Storage", "Lighting"];
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -47,6 +100,15 @@ export default function ShopPage() {
       return matchesCategory && matchesSearch;
     });
   }, [activeCategory, searchQuery]);
+
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [selectedProduct]);
 
   return (
     <main className="relative bg-[#0b0b0b] min-h-screen">
@@ -72,7 +134,6 @@ export default function ShopPage() {
             </motion.div>
             
             <div className="flex flex-col gap-10 lg:w-1/3">
-               {/* Search Bar */}
                <motion.div 
                  initial={{ opacity: 0, scaleX: 0 }}
                  animate={{ opacity: 1, scaleX: 1 }}
@@ -88,23 +149,12 @@ export default function ShopPage() {
                    className="w-full bg-transparent border-b border-white/10 py-5 pl-10 text-[11px] tracking-[0.4em] font-black text-white focus:outline-none focus:border-primary transition-all duration-700 placeholder:text-zinc-700"
                  />
                  {searchQuery && (
-                   <button 
-                     onClick={() => setSearchQuery("")}
-                     className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
-                   >
-                     <X size={16} />
-                   </button>
+                   <button onClick={() => setSearchQuery("")} className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"><X size={16} /></button>
                  )}
                </motion.div>
 
-               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.5, delay: 0.6, ease: EASE }}
-              >
-                <p className="text-zinc-400 text-sm font-light leading-relaxed mb-6">
-                  Experience a curated stream of architectural furniture. Every piece is balanced for form, comfort, and emotion.
-                </p>
+               <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.5, delay: 0.6, ease: EASE }}>
+                <p className="text-zinc-400 text-sm font-light leading-relaxed mb-6">Explore our definitive collection of architectural furniture — where every piece is a testament to minimalist luxury.</p>
                 <div className="flex items-center gap-4 text-white group cursor-pointer w-fit">
                    <SlidersHorizontal size={18} className="text-primary" />
                    <span className="text-[10px] tracking-[0.4em] font-black uppercase">Refine Filters</span>
@@ -118,7 +168,6 @@ export default function ShopPage() {
       {/* Filters & Content */}
       <section className="pb-40 px-6 min-h-[600px]">
         <div className="site-container">
-          {/* Category Bar */}
           <div className="flex flex-wrap items-center gap-x-16 gap-y-8 mb-24">
             {categories.map((cat, i) => (
               <motion.button
@@ -134,47 +183,39 @@ export default function ShopPage() {
                 {cat}
               </motion.button>
             ))}
-            <div className="ml-auto text-[10px] tracking-widest text-zinc-600 uppercase font-bold">
-              Showing {filteredProducts.length} Results
-            </div>
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-24 md:gap-x-14 md:gap-y-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-24">
              <AnimatePresence mode="popLayout">
-               {filteredProducts.length > 0 ? (
-                 filteredProducts.map((product, i) => (
-                   <ShopProductCard key={product.id} product={product} index={i} />
-                 ))
-               ) : (
-                 <motion.div 
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   exit={{ opacity: 0 }}
-                   className="col-span-full py-40 text-center"
-                 >
-                    <p className="text-[12px] tracking-[0.8em] text-zinc-500 font-black uppercase">
-                      No results matching your selection
-                    </p>
-                    <button 
-                      onClick={() => {setActiveCategory("All"); setSearchQuery("");}}
-                      className="mt-10 text-primary text-[10px] tracking-widest uppercase font-black border-b border-primary/20 hover:border-primary transition-all pb-2"
-                    >
-                      Reset All Filters
-                    </button>
-                 </motion.div>
-               )}
+               {filteredProducts.map((product, i) => (
+                 <ShopProductCard 
+                    key={product.id} 
+                    product={product} 
+                    index={i} 
+                    onClick={() => setSelectedProduct(product)}
+                 />
+               ))}
              </AnimatePresence>
           </div>
         </div>
       </section>
+
+      {/* Product Detail Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal 
+            product={selectedProduct} 
+            onClose={() => setSelectedProduct(null)} 
+          />
+        )}
+      </AnimatePresence>
 
       <Footer />
     </main>
   );
 }
 
-function ShopProductCard({ product, index }: { product: any; index: number }) {
+function ShopProductCard({ product, index, onClick }: { product: any; index: number; onClick: () => void }) {
   return (
     <motion.div
       layout
@@ -182,7 +223,8 @@ function ShopProductCard({ product, index }: { product: any; index: number }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.8, ease: EASE }}
-      className="group"
+      className="group cursor-pointer"
+      onClick={onClick}
     >
       <div className="relative aspect-[4/5.5] overflow-hidden bg-zinc-950 rounded-sm mb-8 shadow-2xl border border-white/10 group-hover:border-white/30 transition-colors duration-700">
         <Image
@@ -192,11 +234,9 @@ function ShopProductCard({ product, index }: { product: any; index: number }) {
           className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[0.2] group-hover:grayscale-0"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
         />
-        
-        {/* Overlay Actions */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center">
-           <button className="bg-white text-black text-[10px] tracking-[0.5em] font-black px-8 py-4 uppercase transform translate-y-4 group-hover:translate-y-0 transition-all duration-700 hover:bg-primary hover:text-white">
-             Add to Bag
+           <button className="bg-white text-black text-[10px] tracking-[0.5em] font-black px-8 py-4 uppercase transform translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+             Quick View
            </button>
         </div>
       </div>
@@ -206,14 +246,106 @@ function ShopProductCard({ product, index }: { product: any; index: number }) {
           <h4 className="text-2xl font-display font-black text-white group-hover:text-primary transition-colors duration-700 uppercase leading-none mb-3">
             {product.name}
           </h4>
-          <p className="text-zinc-500 text-[10px] tracking-[0.4em] uppercase font-black">
-            {product.category}
-          </p>
+          <p className="text-zinc-500 text-[10px] tracking-[0.4em] uppercase font-black">{product.category}</p>
         </div>
-        <p className="text-zinc-300 text-[12px] tracking-widest font-black">
-          {product.price}
-        </p>
+        <p className="text-zinc-300 text-[14px] tracking-widest font-black">{product.price}</p>
       </div>
+    </motion.div>
+  );
+}
+
+function ProductModal({ product, onClose }: { product: any; onClose: () => void }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-12"
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-3xl" onClick={onClose} />
+      
+      {/* Modal Content */}
+      <motion.div 
+        initial={{ y: 100, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 100, opacity: 0, scale: 0.95 }}
+        transition={{ duration: 1, ease: EASE }}
+        className="relative bg-[#121212] w-full max-w-6xl h-full max-h-[850px] overflow-hidden flex flex-col md:flex-row border border-white/10 rounded-sm shadow-[0_0_100px_rgba(0,0,0,1)]"
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-8 right-8 z-50 text-white hover:text-primary transition-colors bg-black/20 p-3 rounded-full border border-white/5"
+        >
+          <X size={24} />
+        </button>
+
+        {/* Left: Image Section */}
+        <div className="w-full md:w-1/2 h-[400px] md:h-auto relative overflow-hidden bg-zinc-950">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+
+        {/* Right: Info Section */}
+        <div className="w-full md:w-1/2 flex flex-col p-10 md:p-16 overflow-y-auto custom-scrollbar">
+           <div className="mb-12">
+              <span className="text-primary text-[10px] tracking-[0.6em] font-black uppercase mb-6 block">
+                {product.category} Collection
+              </span>
+              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-[0.8] mb-8">
+                {product.name}
+              </h2>
+              <div className="flex items-center gap-6">
+                 <p className="text-white text-3xl font-black tracking-tight">{product.price}</p>
+                 <div className="h-6 w-[1px] bg-white/20" />
+                 <p className="text-zinc-500 text-[11px] tracking-widest font-black uppercase">In Stock / Ready to Ship</p>
+              </div>
+           </div>
+
+           <div className="space-y-12 mb-16">
+              <div>
+                <h3 className="text-[11px] tracking-[0.4em] font-black text-zinc-400 uppercase mb-4">The Narrative</h3>
+                <p className="text-zinc-300 text-lg md:text-xl font-light leading-relaxed">
+                  {product.description}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-[11px] tracking-[0.4em] font-black text-zinc-400 uppercase mb-4">Specifications</h3>
+                <ul className="space-y-3">
+                   {product.specs.map((spec: string) => (
+                     <li key={spec} className="text-zinc-400 text-sm font-light flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 bg-primary/40 rounded-full" />
+                        {spec}
+                     </li>
+                   ))}
+                </ul>
+              </div>
+           </div>
+
+           {/* Purchase Actions */}
+           <div className="mt-auto pt-10 border-t border-white/5">
+              <div className="flex items-center justify-between mb-8">
+                 <div className="flex items-center gap-6 border border-white/10 rounded-full px-6 py-3">
+                    <button className="text-zinc-500 hover:text-white"><Minus size={16} /></button>
+                    <span className="text-white font-bold text-sm min-w-[20px] text-center">01</span>
+                    <button className="text-zinc-500 hover:text-white"><Plus size={16} /></button>
+                 </div>
+                 <p className="text-[10px] tracking-widest text-zinc-500 uppercase font-bold">Free Worldwide Shipping</p>
+              </div>
+
+              <button className="w-full bg-white text-black py-6 text-[12px] tracking-[0.8em] font-black uppercase flex items-center justify-center gap-6 group hover:bg-primary hover:text-white transition-all duration-700">
+                Purchase This Piece
+                <ShoppingBag size={18} className="transform group-hover:scale-110 transition-transform" />
+              </button>
+           </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
