@@ -6,7 +6,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1];
+const EASE = [0.22, 1, 0.36, 1] as any;
 
 const featuredProducts = [
   { id: 1, name: "Vetta Chair", price: "Starts at $800.00", image: "/product-1.png" },
