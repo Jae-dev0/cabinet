@@ -119,7 +119,7 @@ export default function ShopPage() {
       <section className="pb-40 px-6 min-h-[600px]">
         <div className="site-container">
           {/* Category Bar */}
-          <div className="flex flex-wrap items-center gap-x-12 gap-y-6 mb-24">
+          <div className="flex flex-wrap items-center gap-x-16 gap-y-8 mb-24">
             {categories.map((cat, i) => (
               <motion.button
                 key={cat}
@@ -127,7 +127,7 @@ export default function ShopPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: i * 0.1, ease: EASE }}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-[11px] tracking-[0.6em] font-black uppercase transition-all duration-500 pb-2 border-b-2 ${
+                className={`text-[13px] md:text-[15px] tracking-[0.5em] font-black uppercase transition-all duration-500 pb-4 border-b-2 ${
                   activeCategory === cat ? "text-primary border-primary" : "text-zinc-500 border-transparent hover:text-white"
                 }`}
               >
