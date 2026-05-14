@@ -40,9 +40,15 @@ export default function Footer() {
           <div className="flex flex-col gap-10">
             <h3 className="text-zinc-500 text-[16px] font-bold tracking-widest uppercase">Menu</h3>
             <ul className="space-y-4">
-              {["Home", "Shop", "About", "Contact", "404 Page"].map((item) => (
+              <li key="Home">
+                <Link href="/" className="text-white text-[20px] md:text-[24px] hover:text-[#8b9d83] transition-colors duration-500 font-bold uppercase tracking-tight">Home</Link>
+              </li>
+              <li key="Shop">
+                <Link href="/shop" className="text-white text-[20px] md:text-[24px] hover:text-[#8b9d83] transition-colors duration-500 font-bold uppercase tracking-tight">Shop</Link>
+              </li>
+              {["About", "Contact", "404 Page"].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-white text-[20px] md:text-[24px] hover:text-[#8b9d83] transition-colors duration-500 font-bold uppercase tracking-tight">{item}</Link>
+                  <Link href={`/${item.toLowerCase().replace(" ", "-")}`} className="text-white text-[20px] md:text-[24px] hover:text-[#8b9d83] transition-colors duration-500 font-bold uppercase tracking-tight">{item}</Link>
                 </li>
               ))}
             </ul>
