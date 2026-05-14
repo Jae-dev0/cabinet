@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ArrowRight, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Search, SlidersHorizontal, X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
@@ -148,16 +148,13 @@ export default function ShopPage() {
                    placeholder="SEARCH THE COLLECTION..."
                    className="w-full bg-transparent border-b border-white/10 py-5 pl-10 text-[11px] tracking-[0.4em] font-black text-white focus:outline-none focus:border-primary transition-all duration-700 placeholder:text-zinc-700"
                  />
-                 {searchQuery && (
-                   <button onClick={() => setSearchQuery("")} className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"><X size={16} /></button>
-                 )}
                </motion.div>
 
                <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.5, delay: 0.6, ease: EASE }}>
-                <p className="text-zinc-400 text-sm font-light leading-relaxed mb-6">Explore our definitive collection of architectural furniture — where every piece is a testament to minimalist luxury.</p>
+                <p className="text-zinc-400 text-sm font-light leading-relaxed mb-6">Explore our definitive collection of architectural furniture — where every piece is balanced for form, comfort, and emotion.</p>
                 <div className="flex items-center gap-4 text-white group cursor-pointer w-fit">
                    <SlidersHorizontal size={18} className="text-primary" />
-                   <span className="text-[10px] tracking-[0.4em] font-black uppercase">Refine Filters</span>
+                   <span className="text-[10px] tracking-[0.4em] font-black uppercase">Refine Selection</span>
                 </div>
               </motion.div>
             </div>
@@ -172,9 +169,6 @@ export default function ShopPage() {
             {categories.map((cat, i) => (
               <motion.button
                 key={cat}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: i * 0.1, ease: EASE }}
                 onClick={() => setActiveCategory(cat)}
                 className={`text-[13px] md:text-[15px] tracking-[0.5em] font-black uppercase transition-all duration-500 pb-4 border-b-2 ${
                   activeCategory === cat ? "text-primary border-primary" : "text-zinc-500 border-transparent hover:text-white"
@@ -200,7 +194,7 @@ export default function ShopPage() {
         </div>
       </section>
 
-      {/* Product Detail Modal */}
+      {/* Redesigned Product Detail Modal (Image Matching) */}
       <AnimatePresence>
         {selectedProduct && (
           <ProductModal 
@@ -236,7 +230,7 @@ function ShopProductCard({ product, index, onClick }: { product: any; index: num
         />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center">
            <button className="bg-white text-black text-[10px] tracking-[0.5em] font-black px-8 py-4 uppercase transform translate-y-4 group-hover:translate-y-0 transition-all duration-700">
-             Quick View
+             Discover Piece
            </button>
         </div>
       </div>
@@ -260,28 +254,26 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-12"
+      className="fixed inset-0 z-[1000] flex items-center justify-center"
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/95 backdrop-blur-3xl" onClick={onClose} />
       
-      {/* Modal Content */}
       <motion.div 
-        initial={{ y: 100, opacity: 0, scale: 0.95 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: 100, opacity: 0, scale: 0.95 }}
-        transition={{ duration: 1, ease: EASE }}
-        className="relative bg-[#121212] w-full max-w-6xl h-full max-h-[850px] overflow-hidden flex flex-col md:flex-row border border-white/10 rounded-sm shadow-[0_0_100px_rgba(0,0,0,1)]"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ duration: 0.8, ease: EASE }}
+        className="relative bg-[#0a0a0a] w-full h-full md:h-[90vh] md:max-w-7xl overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(0,0,0,1)] md:rounded-t-3xl border-t border-white/10"
       >
         <button 
           onClick={onClose}
-          className="absolute top-8 right-8 z-50 text-white hover:text-primary transition-colors bg-black/20 p-3 rounded-full border border-white/5"
+          className="absolute top-10 right-10 z-[100] text-white hover:text-primary transition-colors bg-black/40 p-4 rounded-full border border-white/10 backdrop-blur-md"
         >
-          <X size={24} />
+          <X size={28} />
         </button>
 
-        {/* Left: Image Section */}
-        <div className="w-full md:w-1/2 h-[400px] md:h-auto relative overflow-hidden bg-zinc-950">
+        {/* Left: Cinematic Product Visual */}
+        <div className="w-full md:w-1/2 h-[50vh] md:h-full relative overflow-hidden">
           <Image
             src={product.image}
             alt={product.name}
@@ -289,38 +281,44 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
             className="object-cover"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
         </div>
 
-        {/* Right: Info Section */}
-        <div className="w-full md:w-1/2 flex flex-col p-10 md:p-16 overflow-y-auto custom-scrollbar">
+        {/* Right: Bold Editorial Content */}
+        <div className="w-full md:w-1/2 flex flex-col pt-16 pb-0 px-10 md:px-20 overflow-y-auto custom-scrollbar bg-[#080808]">
            <div className="mb-12">
-              <span className="text-primary text-[10px] tracking-[0.6em] font-black uppercase mb-6 block">
+              <span className="text-zinc-500 text-[11px] tracking-[0.6em] font-black uppercase mb-4 block">
                 {product.category} Collection
               </span>
-              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-[0.8] mb-8">
+              <h2 className="text-7xl md:text-[110px] font-display font-black text-white tracking-[0.02em] uppercase leading-[0.75] mb-10 break-words">
                 {product.name}
               </h2>
-              <div className="flex items-center gap-6">
-                 <p className="text-white text-3xl font-black tracking-tight">{product.price}</p>
-                 <div className="h-6 w-[1px] bg-white/20" />
-                 <p className="text-zinc-500 text-[11px] tracking-widest font-black uppercase">In Stock / Ready to Ship</p>
+              <div className="flex items-baseline gap-10">
+                 <p className="text-white text-5xl font-black tracking-tighter">{product.price}</p>
+                 <p className="text-zinc-500 text-[11px] tracking-[0.3em] font-black uppercase">
+                   In Stock / Ready to Ship
+                 </p>
               </div>
            </div>
 
-           <div className="space-y-12 mb-16">
+           <div className="space-y-16 mb-24">
               <div>
-                <h3 className="text-[11px] tracking-[0.4em] font-black text-zinc-400 uppercase mb-4">The Narrative</h3>
-                <p className="text-zinc-300 text-lg md:text-xl font-light leading-relaxed">
+                <h3 className="text-[12px] tracking-[0.6em] font-black text-white uppercase mb-8 border-b border-white/10 pb-4 w-fit">
+                   The Narrative
+                </h3>
+                <p className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed max-w-lg">
                   {product.description}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-[11px] tracking-[0.4em] font-black text-zinc-400 uppercase mb-4">Specifications</h3>
-                <ul className="space-y-3">
+                <h3 className="text-[12px] tracking-[0.6em] font-black text-white uppercase mb-8 border-b border-white/10 pb-4 w-fit">
+                   Specifications
+                </h3>
+                <ul className="space-y-6">
                    {product.specs.map((spec: string) => (
-                     <li key={spec} className="text-zinc-400 text-sm font-light flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 bg-primary/40 rounded-full" />
+                     <li key={spec} className="text-zinc-400 text-sm md:text-base font-medium flex items-center gap-4">
+                        <div className="w-2 h-2 bg-primary rounded-full opacity-50 shadow-[0_0_10px_rgba(139,157,131,0.5)]" />
                         {spec}
                      </li>
                    ))}
@@ -328,20 +326,20 @@ function ProductModal({ product, onClose }: { product: any; onClose: () => void 
               </div>
            </div>
 
-           {/* Purchase Actions */}
-           <div className="mt-auto pt-10 border-t border-white/5">
-              <div className="flex items-center justify-between mb-8">
-                 <div className="flex items-center gap-6 border border-white/10 rounded-full px-6 py-3">
-                    <button className="text-zinc-500 hover:text-white"><Minus size={16} /></button>
-                    <span className="text-white font-bold text-sm min-w-[20px] text-center">01</span>
-                    <button className="text-zinc-500 hover:text-white"><Plus size={16} /></button>
+           {/* Sticky Purchase Bar (Matching Image) */}
+           <div className="mt-auto sticky bottom-0 left-0 w-full bg-[#080808] pt-10 pb-10">
+              <div className="flex items-center justify-between mb-10">
+                 <div className="flex items-center gap-10">
+                    <button className="text-zinc-500 hover:text-white transition-colors"><Minus size={20} /></button>
+                    <span className="text-white font-black text-lg">01</span>
+                    <button className="text-zinc-500 hover:text-white transition-colors"><Plus size={20} /></button>
                  </div>
-                 <p className="text-[10px] tracking-widest text-zinc-500 uppercase font-bold">Free Worldwide Shipping</p>
+                 <p className="text-[11px] tracking-[0.5em] text-zinc-500 uppercase font-black">Free Worldwide Shipping</p>
               </div>
 
-              <button className="w-full bg-white text-black py-6 text-[12px] tracking-[0.8em] font-black uppercase flex items-center justify-center gap-6 group hover:bg-primary hover:text-white transition-all duration-700">
+              <button className="w-full bg-white text-black py-8 text-[14px] tracking-[0.8em] font-black uppercase flex items-center justify-center gap-8 group hover:bg-primary hover:text-white transition-all duration-1000">
                 Purchase This Piece
-                <ShoppingBag size={18} className="transform group-hover:scale-110 transition-transform" />
+                <ShoppingBag size={22} />
               </button>
            </div>
         </div>
