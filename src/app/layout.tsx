@@ -29,8 +29,9 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-background text-foreground font-sans">
+      <body className="min-h-full bg-background text-foreground font-sans selection:bg-primary selection:text-white">
         <div className="grain-overlay" />
+        <div className="architectural-grid pointer-events-none" />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
